@@ -32,6 +32,12 @@ class Kernel extends ConsoleKernel
 
         // 每日零时执行一次
         $schedule->command('larabbs:sync-user-actived-at')->dailyAt('00:00');
+
+        if (app()->environment('production')) {
+            $schedule->command('backup:run')->cron('0 */4 * * * *');
+            $schedule->command('backup:monitor')->dailyAt('03:00');
+            $schedule->command('backup:clean')->dailyAt('03:10');
+        }
     }
 
     /**
